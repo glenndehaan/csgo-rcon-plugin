@@ -1,6 +1,6 @@
 # Counter-Strike Global Offensive Plugin
 
-TODO: add description
+A SourcePawn plugin to provide livescoring for csgo-rcon-nodejs
 
 ## Structure
 - SourcePawn
