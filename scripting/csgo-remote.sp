@@ -33,10 +33,10 @@ public void OnPluginStart()
 {
 	PrintToServer("[CSGO Remote] Loaded: CSGO Remote Utils!");
 	//RegServerCmd
-	RegConsoleCmd("sm_csgo_remote", Command_CSGO_Remote, "Check to check if this plugin is available");
-	RegConsoleCmd("sm_csgo_remote_url", Command_CSGO_Remote_URL, "Set's the CURL Url for API offloading");
+	RegServerCmd("sm_csgo_remote", Command_CSGO_Remote, "Check to check if this plugin is available");
+	RegServerCmd("sm_csgo_remote_url", Command_CSGO_Remote_URL, "Set's the CURL Url for API offloading");
 
-	//httpClient = new HTTPClient("http://127.0.0.1:3542");
+	httpClient = new HTTPClient("http://127.0.0.1:3542");
 
 	HookEvent("round_end", Event_RoundEnd);
 	HookEvent("cs_intermission", Event_MatchEnd);
@@ -83,29 +83,27 @@ public OnConVarChange(Handle:hCvar, const String:oldValue[], const String:newVal
 /**
  * Function runs when sm_csgo_remote is triggered
  *
- * @param client
  * @param args
  */
-public Action Command_CSGO_Remote(int client, int args)
+public Action Command_CSGO_Remote(int args)
 {
-	ReplyToCommand(client, "{\"status\":\"OK\",\"enabled\":true}");
+	ReplyToCommand(0, "{\"status\":\"OK\",\"enabled\":true}");
 	return Plugin_Handled;
 }
 
 /**
  * Function runs when sm_csgo_remote_url is triggered
  *
- * @param client
  * @param args
  */
-public Action Command_CSGO_Remote_URL(int client, int args)
+public Action Command_CSGO_Remote_URL(int args)
 {
 	GetCmdArg(1, url, 128);
 	GetCmdArg(2, path, 128);
 
 	httpClient = new HTTPClient(url);
 
-	ReplyToCommand(client, "{\"status\":\"OK\",\"url\":\"%s\",\"path\":\"%s\"}", url, path);
+	ReplyToCommand(0, "{\"status\":\"OK\",\"url\":\"%s\",\"path\":\"%s\"}", url, path);
 	return Plugin_Handled;
 }
 
@@ -152,6 +150,14 @@ public void Event_RoundEnd(Handle event, const char[] name, bool dontBroadcast)
 	data.SetBool("locked", false);
 	data.Set("match", match);
 	data.Set("players", players);
+
+	decl String:ct_name[32];
+	GetConVarString(g_hCvarTeamName1, ct_name, sizeof(ct_name));
+	decl String:t_name[32];
+	GetConVarString(g_hCvarTeamName2, t_name, sizeof(t_name));
+
+	data.SetString("ct_name", ct_name);
+	data.SetString("t_name", t_name);
 
 	PrintToServer("[CSGO Remote] REST Path: %s", path);
 	httpClient.Post(path, data, OnRESTCall);
@@ -202,6 +208,14 @@ public void Event_MatchEnd(Handle event, const char[] name, bool dontBroadcast)
 	data.SetBool("locked", true);
 	data.Set("match", match);
 	data.Set("players", players);
+
+	decl String:ct_name[32];
+	GetConVarString(g_hCvarTeamName1, ct_name, sizeof(ct_name));
+	decl String:t_name[32];
+	GetConVarString(g_hCvarTeamName2, t_name, sizeof(t_name));
+
+	data.SetString("ct_name", ct_name);
+	data.SetString("t_name", t_name);
 
 	PrintToServer("[CSGO Remote] REST Path: %s", path);
 	httpClient.Post(path, data, OnRESTCall);
