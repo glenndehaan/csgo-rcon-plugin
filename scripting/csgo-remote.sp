@@ -12,6 +12,8 @@ HTTPClient httpClient;
 char url[128];
 char path[128];
 
+bool halfTime = false;
+
 /**
  * Defines the default plugin info
  */
@@ -117,13 +119,7 @@ public void Event_HalfTime(Handle event, const char[] name, bool dontBroadcast)
 {
 	PrintToServer("[CSGO Remote] Half Time!");
 
-	decl String:name1[32];
-	decl String:name2[32];
-	GetConVarString(g_hCvarTeamName1, name1, sizeof(name1));
-	GetConVarString(g_hCvarTeamName2, name2, sizeof(name2));
-
-	SetConVarString(g_hCvarTeamName2, name1);
-	SetConVarString(g_hCvarTeamName1, name2);
+	halfTime = true;
 }
 
 /**
@@ -167,6 +163,7 @@ public void Event_RoundEnd(Handle event, const char[] name, bool dontBroadcast)
 
 	data.SetString("status", "round_end");
 	data.SetBool("locked", false);
+	data.SetBool("half_time", halfTime);
 	data.Set("match", match);
 	data.Set("players", players);
 
@@ -225,6 +222,7 @@ public void Event_MatchEnd(Handle event, const char[] name, bool dontBroadcast)
 
 	data.SetString("status", "match_end");
 	data.SetBool("locked", true);
+	data.SetBool("half_time", halfTime);
 	data.Set("match", match);
 	data.Set("players", players);
 
