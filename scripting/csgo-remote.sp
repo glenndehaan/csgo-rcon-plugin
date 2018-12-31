@@ -32,13 +32,13 @@ public Plugin myinfo =
 public void OnPluginStart()
 {
 	PrintToServer("[CSGO Remote] Loaded: CSGO Remote Utils!");
-	//RegServerCmd
 	RegServerCmd("sm_csgo_remote", Command_CSGO_Remote, "Check to check if this plugin is available");
 	RegServerCmd("sm_csgo_remote_url", Command_CSGO_Remote_URL, "Set's the CURL Url for API offloading");
 
 	httpClient = new HTTPClient("http://127.0.0.1:3542");
 
 	HookEvent("round_end", Event_RoundEnd);
+	HookEvent("announce_phase_end", Event_HalfTime);
 	HookEvent("cs_intermission", Event_MatchEnd);
 
 	g_Terrorist = CreateConVar("sm_teamname_t", "", "Sets your Terrorist team name", 0);
@@ -105,6 +105,25 @@ public Action Command_CSGO_Remote_URL(int args)
 
 	ReplyToCommand(0, "{\"status\":\"OK\",\"url\":\"%s\",\"path\":\"%s\"}", url, path);
 	return Plugin_Handled;
+}
+
+/**
+ * Event hook for half_time
+ *
+ * @param event
+ * @param name
+ */
+public void Event_HalfTime(Handle event, const char[] name, bool dontBroadcast)
+{
+	PrintToServer("[CSGO Remote] Half Time!");
+
+	decl String:name1[32];
+	decl String:name2[32];
+	GetConVarString(g_hCvarTeamName1, name1, sizeof(name1));
+	GetConVarString(g_hCvarTeamName2, name2, sizeof(name2));
+
+	SetConVarString(g_hCvarTeamName2, name1);
+	SetConVarString(g_hCvarTeamName1, name2);
 }
 
 /**
