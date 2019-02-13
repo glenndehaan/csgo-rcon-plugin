@@ -143,7 +143,7 @@ public void Event_RoundEnd(Handle event, const char[] name, bool dontBroadcast)
 	new item;
 	for(item = 1; item < MaxPlayers; item++)
 	{
-		if(IsClientInGame(item) && !IsFakeClient(item))
+		if(IsClientInGame(item))
 		{
 			char player_name[50];
 			GetClientName(item, player_name, 50);
@@ -151,6 +151,7 @@ public void Event_RoundEnd(Handle event, const char[] name, bool dontBroadcast)
 
 			player.SetInt("id", GetClientUserId(item));
 			player.SetString("name", player_name);
+			player.SetBool("bot", IsFakeClient(item));
 			player.SetInt("team", GetClientTeam(item));
 			player.SetInt("kills", GetClientFrags(item));
 			player.SetInt("assists", CS_GetClientAssists(item));
@@ -202,7 +203,7 @@ public void Event_MatchEnd(Handle event, const char[] name, bool dontBroadcast)
 	new item;
 	for(item = 1; item < MaxPlayers; item++)
 	{
-		if(IsClientInGame(item) && !IsFakeClient(item))
+		if(IsClientInGame(item))
 		{
 			char player_name[50];
 			GetClientName(item, player_name, 50);
@@ -210,6 +211,7 @@ public void Event_MatchEnd(Handle event, const char[] name, bool dontBroadcast)
 
 			player.SetInt("id", GetClientUserId(item));
 			player.SetString("name", player_name);
+			player.SetBool("bot", IsFakeClient(item));
 			player.SetInt("team", GetClientTeam(item));
 			player.SetInt("kills", GetClientFrags(item));
 			player.SetInt("assists", CS_GetClientAssists(item));
