@@ -22,8 +22,8 @@ public Plugin myinfo =
 	name = "CSGO Remote Utils",
 	author = "Glenn de Haan",
 	description = "A plugin used for the CSGO Remote package",
-	version = "2.0",
-	url = "https://github.com/"
+	version = "3.0",
+	url = "https://github.com/glenndehaan/csgo-rcon-plugin"
 }
 
 /**
