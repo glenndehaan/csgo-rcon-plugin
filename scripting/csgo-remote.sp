@@ -132,6 +132,7 @@ public void Event_RoundEnd(Handle event, const char[] name, bool dontBroadcast)
 {
 	PrintToServer("[CSGO Remote] Round End!");
 
+	JSONObject sendObject = new JSONObject();
 	JSONObject data = new JSONObject();
 	JSONObject match = new JSONObject();
 	JSONArray players = new JSONArray();
@@ -176,10 +177,14 @@ public void Event_RoundEnd(Handle event, const char[] name, bool dontBroadcast)
 	data.SetString("ct_name", ct_name);
 	data.SetString("t_name", t_name);
 
+	sendObject.SetString("instruction", "round_update");
+	sendObject.Set("data", data);
+
 	PrintToServer("[CSGO Remote] REST Path: %s", path);
-	httpClient.Post(path, data, OnRESTCall);
+	httpClient.Post(path, sendObject, OnRESTCall);
 	delete match;
 	delete data;
+	delete sendObject;
 }
 
 /**
@@ -192,6 +197,7 @@ public void Event_MatchEnd(Handle event, const char[] name, bool dontBroadcast)
 {
 	PrintToServer("[CSGO Remote] Match End!");
 
+	JSONObject sendObject = new JSONObject();
 	JSONObject data = new JSONObject();
 	JSONObject match = new JSONObject();
 	JSONArray players = new JSONArray();
@@ -236,10 +242,14 @@ public void Event_MatchEnd(Handle event, const char[] name, bool dontBroadcast)
 	data.SetString("ct_name", ct_name);
 	data.SetString("t_name", t_name);
 
+	sendObject.SetString("instruction", "round_update");
+	sendObject.Set("data", data);
+
 	PrintToServer("[CSGO Remote] REST Path: %s", path);
-	httpClient.Post(path, data, OnRESTCall);
+	httpClient.Post(path, sendObject, OnRESTCall);
 	delete match;
 	delete data;
+	delete sendObject;
 }
 
 /**
